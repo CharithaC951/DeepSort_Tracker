@@ -1,0 +1,11 @@
+# requirements.txt
+flask
+requests
+supabase
+numpy
+# Core CV/Deep Learning Libraries
+opencv-python-headless
+insightface
+onnxruntime
+ultralytics
+deep-sort-realtime
