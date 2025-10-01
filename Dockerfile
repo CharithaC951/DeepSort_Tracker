@@ -1,3 +1,18 @@
+# Install core system dependencies and build tools
+# 'build-essential' provides g++, gcc, and make
+# 'libsm6', 'libxext6', 'libxrender1' are often required by OpenCV/video processing
+RUN apt-get update && \
+    apt-get install -y \
+    build-essential \
+    libsm6 \
+    libxext6 \
+    libxrender1 \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 # Use a minimal image with Python and necessary libraries pre-installed
 FROM python:3.11-slim
 
