@@ -94,9 +94,10 @@ def track():
     data = request.get_json()
     patient_id = data.get("patient_id")
     recording_url = data.get("recording_url") 
+    recording_id = data.get("recording_id") 
 
-    if not patient_id or not recording_url:
-        return jsonify(error="patient_id and recording_url are required"), 400
+    if not patient_id or not recording_url or not recording_id:
+        return jsonify(error="patient_id, recording_url, and recording_id are required"), 400
 
     # Extract a unique ID from the recording URL (e.g., the filename part)
     try:
@@ -154,6 +155,12 @@ def track():
         # 6. Database Update (Crucial)
         # In a real scenario, you'd update your 'recordings' table here:
         # sb.table('recordings').update({'processed_video_url': processed_video_url, 'status': 'COMPLETED'}).eq('some_unique_id', recording_url_id).execute()
+        # 6. Database Update (CRUCIAL ASYNCHRONOUS STEP)
+        sb.table('recordings').update({
+            'processed_video_url': processed_video_url, 
+            'status': 'completed', 
+            'updated_at': 'now()' # Optional: useful timestamp
+        }).eq('id', recording_id).execute()
 
         return jsonify(processed_video_url=processed_video_url, status="COMPLETED"), 200
 
